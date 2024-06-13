@@ -21,7 +21,10 @@ library(zoo)
 
 # data
 ClimateData <- read.csv("https://raw.githubusercontent.com/atkinsjeff/ALTA/main/data/ClimateNormals.csv")
-temp <- read.csv("https://raw.githubusercontent.com/atkinsjeff/ALTA/main/data/ACGTemp.csv")
+#temp <- read.csv("https://raw.githubusercontent.com/atkinsjeff/ALTA/main/data/ACGTemp.csv")
+temp <- read.csv("./data/ACGTemp.csv")
+temp$Year <- as.integer(temp$Year)
+temp$date <- as.Date(temp$date)
 
 # this is taken from:  https://library.virginia.edu/data/articles/getting-started-with-shiny
 ui <- fluidPage(

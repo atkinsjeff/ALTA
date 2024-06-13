@@ -17,12 +17,13 @@ library(shinydashboard)
 library(ggplot2)
 library(shinyjs)
 library(zoo)
+library(rsconnect)
 #library(forecast)
 
 # data
 ClimateData <- read.csv("https://raw.githubusercontent.com/atkinsjeff/ALTA/main/data/ClimateNormals.csv")
-#temp <- read.csv("https://raw.githubusercontent.com/atkinsjeff/ALTA/main/data/ACGTemp.csv")
-temp <- read.csv("./data/ACGTemp.csv")
+temp <- read.csv("https://raw.githubusercontent.com/atkinsjeff/ALTA/main/data/ACGTemp.csv")
+# temp <- read.csv("./data/ACGTemp.csv")
 temp$Year <- as.integer(temp$Year)
 temp$date <- as.Date(temp$date)
 
@@ -140,7 +141,7 @@ server <- function(input, output) {
         } else if (input$timeAvg == "annual") {
           {.} %>%
             group_by(siteID, var, Year) %>%
-            summarize(value = mean(value, na.rm = TRUE))
+            summarize(value = mean(value, na.rm = TRUE), .groups = 'drop')
         }
       }
   })
@@ -165,7 +166,7 @@ server <- function(input, output) {
           {.} %>%
             mutate(Year = as.factor(Year)) %>%
             group_by(siteID, Year) %>%
-            summarize(P = sum(P, na.rm = TRUE)) %>%
+            summarize(P = sum(P, na.rm = TRUE), .groups = 'drop') %>%
             data.frame()
         }
       }

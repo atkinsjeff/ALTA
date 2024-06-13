@@ -53,3 +53,7 @@ ClimateData %>%
   data.frame() -> ClimateData
 
 write.csv(ClimateData, "./data/ClimateNormals.csv", row.names = FALSE)
+
+
+
+setAccountInfo(name, token, secret, server = "shinyapps.io")

@@ -10,6 +10,8 @@
 # Libraries
 library(tidyverse)
 library(shiny)
+library(leaflet)
+library(htmltools)
 #library(shinyWidgets)
 #library(dslabs)
 #library(plotly)
@@ -23,10 +25,12 @@ library(rsconnect)
 # data
 ClimateData <- read.csv("https://raw.githubusercontent.com/atkinsjeff/ALTA/main/data/ClimateNormals.csv")
 temp <- read.csv("https://raw.githubusercontent.com/atkinsjeff/ALTA/main/data/ACGTemp.csv")
+acg <- terra::vect("https://github.com/atkinsjeff/ALTA/raw/main/data/acg.geojson")
 # temp <- read.csv("./data/ACGTemp.csv")
 temp$Year <- as.integer(temp$Year)
 temp$date <- as.Date(temp$date)
 
+bio1 <- terra::rast("https://github.com/atkinsjeff/ALTA/raw/main/data/CHELSAbio1.tif")
 # this is taken from:  https://library.virginia.edu/data/articles/getting-started-with-shiny
 ui <- fluidPage(
   
@@ -112,7 +116,32 @@ ui <- fluidPage(
                         )
                       )
                       
+             ),
+             #Precipitation
+             tabPanel("Mapping",
+                      sidebarLayout(
+                        sidebarPanel(
+                          
+                          selectizeInput("siteInput", "ACG Site ID",
+                                         choices = unique(temp$siteID),  
+                                         selected="Maritza", multiple = FALSE),
+                          # radioButtons("timeAvg", label = h4("Time Averaging Period"),
+                          #               choices = list("Annual" = "annual", "None" = ""),
+                          #               selected = ""),
+                          sliderInput("yearInput", "Year", min = min(temp$Year), max = max(temp$Year),
+                                      value= range(temp$Year), sep = ""),
+                          radioButtons("trendPrecip", label = h4("Trendline"),
+                                       choices = list("Add Trendline" = "lm", "Remove Trendline" = ""),
+                                       selected = "")
+                        ),
+                        mainPanel(
+                          leafletOutput("map")
+                          
+                        )
+                      )
+                      
              )
+             
              
   )    
 )
@@ -307,6 +336,27 @@ server <- function(input, output) {
   })
   
   
+  # interactive map
+  output$map <- renderLeaflet({
+    pal <- colorNumeric(
+      palette = "viridis",
+      domain = 0:30, na.color = "transparent")
+    
+    leaflet() %>%
+      setView(lat = 10.9, lng = -85.6, zoom = 11) %>%
+      addTiles() %>%
+      addRasterImage(bio1, colors = pal, opacity = 0.6) %>%
+      addLegend(pal = pal, values = c(0:30, by = 5),
+                 title = "Mean Temp")
+    # 
+    # leaflet(acg) %>%
+    #   setView(lat = 10.9, lng = -85.6, zoom = 11) %>%
+    #   addTiles() %>%
+    #   addRasterImage(bio1, colors = pal, opacity = 0.6) %>%
+    #   #addLegend(pal = pal, values = values(bio1),
+    #   #         title = "Mean Temp") %>%
+    #   addMarkers(~longitude, ~latitude, popup = ~htmlEscape(name))
+  })
 }
 
 shinyApp(ui=ui, server=server)

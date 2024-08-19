@@ -1,7 +1,7 @@
 # graveyard
 # Load data ----
 dat <- read.csv("./data/WordlClimCostaRica.csv")
-
+dat <- read.csv("./data/ACGChelsaData.csv")
 # make dat long
 dat %>%
   pivot_longer(
@@ -57,3 +57,18 @@ write.csv(ClimateData, "./data/ClimateNormals.csv", row.names = FALSE)
 
 
 setAccountInfo(name, token, secret, server = "shinyapps.io")
+
+
+
+######
+# MAKING ACG POINTS
+#### read in ACG points
+acg <- read.csv("./data/ACGPoints.csv")
+
+acg.pts <- sf::st_as_sf(x = acg,
+                    coords = c("longitude", "latitude"),
+                    crs = "EPSG:4326")
+
+sf::st_write(acg.pts, "acg.geojson")
+plot(acg.pts
+     )

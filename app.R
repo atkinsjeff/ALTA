@@ -9,7 +9,7 @@
 
 # Libraries
 library(tidyverse)
-#library(shiny)
+library(shiny)
 library(leaflet)
 library(htmltools)
 #library(shinyWidgets)
@@ -19,6 +19,7 @@ library(htmltools)
 library(ggplot2)
 #library(shinyjs)
 #library(zoo)
+library(terra)
 library(rsconnect)
 #library(forecast)
 

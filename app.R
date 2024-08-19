@@ -9,7 +9,7 @@
 
 # Libraries
 library(tidyverse)
-library(shiny)
+#library(shiny)
 library(leaflet)
 library(htmltools)
 #library(shinyWidgets)

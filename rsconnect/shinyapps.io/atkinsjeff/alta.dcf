@@ -1,10 +1,12 @@
 name: alta
-title:
+title: ALTA
 username: atkinsjeff
 account: atkinsjeff
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 12174091
-bundleId: 8734973
+bundleId: 9002434
 url: https://atkinsjeff.shinyapps.io/alta/
 version: 1
+asMultiple: FALSE
+asStatic: FALSE
